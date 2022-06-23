@@ -3,8 +3,8 @@ import random
 
 from requests import get, post, delete
 
-from utils import generate_random_string
-from exceptions import EmailAlreadyUsed, EmailAlreadyUsedError
+from mail_gw.utils import generate_random_string
+from mail_gw.exceptions import EmailAlreadyUsed, EmailAlreadyUsedError
 
 DOMAINS = ['bluebasketbooks.com.au']
 
