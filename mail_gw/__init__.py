@@ -1,1 +1,1 @@
-from modals import Account
+from mail_gw.models import Account
