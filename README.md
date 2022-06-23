@@ -22,9 +22,11 @@ from mail_gw import Account
 
 # Create a account
 a = Account(address='test@bluebasketbooks.com.au', password='123456')  # Use the domain listed on the website
-b = Account(address='test', password='123456')  # Only prefix, it will randomly choose a domain
-c = Account()  # Use both random address and password
+a = Account(address='test', password='123456')  # Only prefix, it will randomly choose a domain
+a = Account()  # Use both random address and password
 
+# See the address and password
+print(a.address, a.password)
 # See the details of the account
 print(a.json())
 
@@ -37,6 +39,7 @@ print(a.json())
 # Check the email's inbox
 print(a.get_message(latest=0))
 # latest: 0 means the latest email, 1 means the second latest email, and so on.
+# If there is no email, it will raise IndexError.
 ```
 
 ## Issues

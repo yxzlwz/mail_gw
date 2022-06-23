@@ -24,16 +24,16 @@ class Account:
     def __init__(self,
                  address: str = generate_random_string(),
                  password: str = generate_random_string(),
-                 auto_register: bool = True):
+                 auto_login: bool = True):
         if '@' not in address:
             address += '@' + random.choice(DOMAINS)
         self.address = address
         self.password = password
-        if auto_register:
-            self.register()
+        if auto_login:
+            self.register(raise_error=False)
             self.get_token()
 
-    def register(self):
+    def register(self, raise_error: bool = True):
         r = post(
             'https://api.mail.gw/accounts',
             headers=self.headers,
@@ -43,7 +43,10 @@ class Account:
             }),
         ).json()
         if EmailAlreadyUsed in r.get('hydra:description', ''):
-            raise EmailAlreadyUsedError(self.address)
+            if raise_error:
+                raise EmailAlreadyUsedError(self.address)
+            else:
+                return False
         self.id = r['id']
         return self.json()
 
@@ -55,8 +58,9 @@ class Account:
                 'address': self.address,
                 'password': self.password
             }),
-        ).json()
-        assert r.get('code') == 200, 'Authentication failed!'
+        )
+        assert r.status_code == 200, 'Authentication failed!'
+        r = r.json()
         self.token = r['token']
         self.headers['Authorization'] = f'Bearer {r["token"]}'
         return self.json()
@@ -82,6 +86,9 @@ class Account:
         return r
 
     def destroy(self):
+        if self.id is None:
+            r = get('https://api.mail.gw/me', headers=self.headers).json()
+            self.id = r['id']
         delete(
             'https://api.mail.gw/accounts/' + self.id,
             headers=self.headers,
