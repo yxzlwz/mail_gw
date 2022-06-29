@@ -22,9 +22,13 @@ class Account:
     retention_at: int = None
 
     def __init__(self,
-                 address: str = generate_random_string(),
-                 password: str = generate_random_string(),
+                 address: str = None,
+                 password: str = None,
                  auto_login: bool = True):
+        if address is None:
+            address = generate_random_string()
+        if password is None:
+            password = generate_random_string()
         if '@' not in address:
             address += '@' + random.choice(DOMAINS)
         self.address = address
