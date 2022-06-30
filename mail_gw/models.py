@@ -3,14 +3,17 @@ import random
 
 from requests import get, post, delete
 
-from mail_gw.utils import generate_random_string
-from mail_gw.exceptions import EmailAlreadyUsed, EmailAlreadyUsedError
+from .utils import generate_random_string
+from .exceptions import EmailAlreadyUsed, EmailAlreadyUsedError
 
-DOMAINS = ['bluebasketbooks.com.au']
+DOMAINS = []
 
 
-def update_domain_list():
-    ...
+def get_domain_list():
+    global DOMAINS
+    r = get('https://api.mail.gw/domains?page=1').json()
+    for i in r['hydra:member']:
+        DOMAINS.append(i['domain'])
 
 
 class Account:
@@ -30,6 +33,8 @@ class Account:
         if password is None:
             password = generate_random_string()
         if '@' not in address:
+            if len(DOMAINS) == 0:
+                get_domain_list()
             address += '@' + random.choice(DOMAINS)
         self.address = address
         self.password = password

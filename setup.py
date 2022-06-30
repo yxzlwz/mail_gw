@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='mail_gw',
-    version='0.3',
+    version='0.4',
     description='Tempmail Python SDK of https://api.mail.gw/',
     url="https://github.com/Danny-Yxzl/mail_gw",
     author="Yixiangzhilv",
